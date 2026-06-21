@@ -1,7 +1,7 @@
 import { useUiStore } from '../store/uiStore'
 import { useSettingsStore } from '../store/settingsStore'
-import type { AIDifficulty, BackgroundTheme } from '../store/settingsStore'
-import { X, Volume2, Shield, Settings2, Sliders, Globe, Eye, Scale, Palette } from 'lucide-react'
+import type { AIDifficulty, BackgroundTheme, PieceTheme } from '../store/settingsStore'
+import { X, Volume2, Volume1, VolumeX, Shield, Settings2, Sliders, Globe, Eye, Scale, Palette, Crown } from 'lucide-react'
 
 export function SettingsModal() {
   const isOpen = useUiStore((state) => state.isSettingsModalOpen)
@@ -14,6 +14,7 @@ export function SettingsModal() {
     boardRotationLocked,
     stalemateRuleEnabled,
     backgroundTheme,
+    pieceTheme,
     language,
     setDifficulty,
     setSoundVolume,
@@ -21,6 +22,7 @@ export function SettingsModal() {
     setBoardRotationLocked,
     setStalemateRuleEnabled,
     setBackgroundTheme,
+    setPieceTheme,
     setLanguage
   } = useSettingsStore()
 
@@ -61,7 +63,7 @@ export function SettingsModal() {
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-6 max-h-[60vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           
           {/* AI Level */}
           <div className="space-y-2.5">
@@ -85,7 +87,13 @@ export function SettingsModal() {
           <div className="space-y-2.5">
             <div className="flex justify-between items-center">
               <label className="text-xs font-semibold uppercase tracking-wider text-neutral-500 flex items-center gap-1.5">
-                <Volume2 className="w-3.5 h-3.5" /> Sound Effects Volume
+                {soundVolume === 0 ? (
+                  <VolumeX className="w-3.5 h-3.5 text-neutral-450" />
+                ) : soundVolume < 0.5 ? (
+                  <Volume1 className="w-3.5 h-3.5 text-neutral-600" />
+                ) : (
+                  <Volume2 className="w-3.5 h-3.5 text-neutral-800" />
+                )} Sound Effects Volume
               </label>
               <span className="text-xs font-mono font-medium text-neutral-600">
                 {Math.round(soundVolume * 100)}%
@@ -98,7 +106,10 @@ export function SettingsModal() {
               step="0.05"
               value={soundVolume}
               onChange={(e) => setSoundVolume(parseFloat(e.target.value))}
-              className="w-full h-1.5 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-neutral-800"
+              className="w-full h-1.5 rounded-lg appearance-none cursor-pointer accent-neutral-950"
+              style={{
+                background: `linear-gradient(to right, #0a0a0a 0%, #0a0a0a ${soundVolume * 100}%, #d4d4d4 ${soundVolume * 100}%, #d4d4d4 100%)`
+              }}
             />
           </div>
 
@@ -119,7 +130,10 @@ export function SettingsModal() {
               step="0.1"
               value={cameraSensitivity}
               onChange={(e) => setCameraSensitivity(parseFloat(e.target.value))}
-              className="w-full h-1.5 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-neutral-800"
+              className="w-full h-1.5 rounded-lg appearance-none cursor-pointer accent-neutral-950"
+              style={{
+                background: `linear-gradient(to right, #0a0a0a 0%, #0a0a0a ${((cameraSensitivity - 0.5) / 1.5) * 100}%, #d4d4d4 ${((cameraSensitivity - 0.5) / 1.5) * 100}%, #d4d4d4 100%)`
+              }}
             />
           </div>
 
@@ -159,6 +173,21 @@ export function SettingsModal() {
                 }`}
               />
             </button>
+          </div>
+
+          {/* Piece Theme */}
+          <div className="space-y-2.5">
+            <label className="text-xs font-semibold uppercase tracking-wider text-neutral-500 flex items-center gap-1.5">
+              <Crown className="w-3.5 h-3.5" /> Chess Piece Style
+            </label>
+            <select
+              value={pieceTheme}
+              onChange={(e) => setPieceTheme(e.target.value as PieceTheme)}
+              className="w-full py-2.5 px-4 bg-white/70 border border-neutral-200 rounded-chess text-neutral-700 focus:border-neutral-900 focus:outline-none transition-all duration-200"
+            >
+              <option value="doff">Matte (Doff)</option>
+              <option value="transparent">Transparent Glass (Mengkilat)</option>
+            </select>
           </div>
 
           {/* Background Theme */}

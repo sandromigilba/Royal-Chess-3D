@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import * as THREE from 'three'
+import { useSettingsStore } from '../store/settingsStore'
 
 interface PieceGeomProps {
   color: 'w' | 'b';
@@ -19,6 +20,8 @@ export function PieceMaterial({ color, hovered = false, selected = false, checki
   selected?: boolean; 
   checking?: boolean;
 }) {
+  const pieceTheme = useSettingsStore((state) => state.pieceTheme);
+
   // White: abu muda (#cdd1d6), Black: abu tua (#4b5058)
   const baseColor = color === 'w' ? '#cdd1d6' : '#4b5058';
 
@@ -30,21 +33,43 @@ export function PieceMaterial({ color, hovered = false, selected = false, checki
         ? (color === 'w' ? '#9ba4b0' : '#686f7a') 
         : '#000000';
 
-  // Abu muda: 80% opaque — subtle frost
-  // Abu tua: 72% opaque — deep smoked glass
-  const opacity = color === 'w' ? 0.80 : 0.72;
+  const isDoff = pieceTheme === 'doff';
+
+  const opacity = isDoff
+    ? 1.0
+    : (color === 'w' ? 0.80 : 0.72);
+
+  const roughness = isDoff
+    ? (color === 'w' ? 0.50 : 0.55)
+    : (color === 'w' ? 0.18 : 0.14);
+
+  const metalness = isDoff
+    ? (color === 'w' ? 0.30 : 0.40)
+    : (color === 'w' ? 0.55 : 0.65);
+
+  const reflectivity = isDoff
+    ? (color === 'w' ? 0.30 : 0.30)
+    : (color === 'w' ? 0.70 : 0.60);
+
+  const clearcoat = isDoff
+    ? (color === 'w' ? 0.10 : 0.10)
+    : (color === 'w' ? 0.50 : 0.70);
+
+  const clearcoatRoughness = isDoff
+    ? (color === 'w' ? 0.60 : 0.60)
+    : (color === 'w' ? 0.15 : 0.08);
 
   return (
     <meshPhysicalMaterial
       color={baseColor}
-      roughness={color === 'w' ? 0.18 : 0.14}
-      metalness={color === 'w' ? 0.55 : 0.65}
-      reflectivity={color === 'w' ? 0.7 : 0.6}
-      clearcoat={color === 'w' ? 0.5 : 0.7}
-      clearcoatRoughness={color === 'w' ? 0.15 : 0.08}
+      roughness={roughness}
+      metalness={metalness}
+      reflectivity={reflectivity}
+      clearcoat={clearcoat}
+      clearcoatRoughness={clearcoatRoughness}
       emissive={emissive}
       emissiveIntensity={checking ? 1.1 : (selected ? 0.55 : (hovered ? 0.18 : 0.0))}
-      transparent
+      transparent={!isDoff}
       opacity={opacity}
     />
   )

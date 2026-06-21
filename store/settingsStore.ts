@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware'
 
 export type AIDifficulty = 'beginner' | 'easy' | 'normal' | 'hard' | 'expert' | 'master';
 export type BackgroundTheme = 'default' | 'dark-white' | 'cloudy-sky';
+export type PieceTheme = 'doff' | 'transparent';
 
 export interface SettingsState {
   aiDifficulty: AIDifficulty;
@@ -12,6 +13,7 @@ export interface SettingsState {
   boardRotationLocked: boolean;
   stalemateRuleEnabled: boolean;
   backgroundTheme: BackgroundTheme;
+  pieceTheme: PieceTheme;
   language: string;
   setDifficulty: (difficulty: AIDifficulty) => void;
   setSoundVolume: (volume: number) => void;
@@ -20,6 +22,7 @@ export interface SettingsState {
   setBoardRotationLocked: (locked: boolean) => void;
   setStalemateRuleEnabled: (enabled: boolean) => void;
   setBackgroundTheme: (theme: BackgroundTheme) => void;
+  setPieceTheme: (theme: PieceTheme) => void;
   setLanguage: (lang: string) => void;
 }
 
@@ -31,8 +34,9 @@ export const useSettingsStore = create<SettingsState>()(
       cameraSensitivity: 1.0,
       animationSpeed: 1.0,
       boardRotationLocked: false,
-      stalemateRuleEnabled: true,
+      stalemateRuleEnabled: false,
       backgroundTheme: 'default',
+      pieceTheme: 'doff',
       language: 'en',
 
       setDifficulty: (aiDifficulty) => set({ aiDifficulty }),
@@ -42,6 +46,7 @@ export const useSettingsStore = create<SettingsState>()(
       setBoardRotationLocked: (boardRotationLocked) => set({ boardRotationLocked }),
       setStalemateRuleEnabled: (stalemateRuleEnabled) => set({ stalemateRuleEnabled }),
       setBackgroundTheme: (backgroundTheme) => set({ backgroundTheme }),
+      setPieceTheme: (pieceTheme) => set({ pieceTheme }),
       setLanguage: (language) => set({ language }),
     }),
     {
@@ -55,6 +60,7 @@ export const useSettingsStore = create<SettingsState>()(
         boardRotationLocked: state.boardRotationLocked,
         stalemateRuleEnabled: state.stalemateRuleEnabled,
         backgroundTheme: state.backgroundTheme,
+        pieceTheme: state.pieceTheme,
         language: state.language,
       }),
     }

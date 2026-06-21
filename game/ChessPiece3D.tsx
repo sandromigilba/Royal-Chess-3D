@@ -13,6 +13,7 @@ import {
 } from './PieceGeometries'
 import { useUiStore } from '../store/uiStore'
 import { useGameStore } from '../store/gameStore'
+import { useSettingsStore } from '../store/settingsStore'
 
 interface ChessPiece3DProps {
   id: string;
@@ -37,6 +38,7 @@ export const ChessPiece3D = memo(({ type, color, square, onSelect, isCaptured = 
   const isAiThinking   = useGameStore((state) => state.isAiThinking)
   const inCheck        = useGameStore((state) => state.inCheck)
   const turn           = useGameStore((state) => state.turn)
+  const pieceTheme     = useSettingsStore((state) => state.pieceTheme)
 
   const isSelected = selectedSquare === square
   const isHovered  = hoveredSquare === square
@@ -69,7 +71,7 @@ export const ChessPiece3D = memo(({ type, color, square, onSelect, isCaptured = 
         if (child instanceof THREE.Mesh && child.material) {
           const mat = child.material as THREE.MeshPhysicalMaterial;
           mat.transparent = true;
-          const baseOpacity = color === 'w' ? 0.80 : 0.72;
+          const baseOpacity = pieceTheme === 'doff' ? 1.0 : (color === 'w' ? 0.80 : 0.72);
           mat.opacity = baseOpacity * (1 - progress);
         }
       });
@@ -112,7 +114,9 @@ export const ChessPiece3D = memo(({ type, color, square, onSelect, isCaptured = 
       groupRef.current.traverse((child) => {
         if (child instanceof THREE.Mesh && child.material) {
           const mat = child.material as THREE.MeshPhysicalMaterial;
-          mat.opacity = color === 'w' ? 0.80 : 0.72;
+          mat.transparent = pieceTheme !== 'doff';
+          const baseOpacity = pieceTheme === 'doff' ? 1.0 : (color === 'w' ? 0.80 : 0.72);
+          mat.opacity = baseOpacity;
         }
       });
     }
