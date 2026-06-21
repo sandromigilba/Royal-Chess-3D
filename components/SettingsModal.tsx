@@ -185,8 +185,8 @@ export function SettingsModal() {
               onChange={(e) => setPieceTheme(e.target.value as PieceTheme)}
               className="w-full py-2.5 px-4 bg-white/70 border border-neutral-200 rounded-chess text-neutral-700 focus:border-neutral-900 focus:outline-none transition-all duration-200"
             >
-              <option value="doff">Matte (Doff)</option>
-              <option value="transparent">Transparent Glass (Mengkilat)</option>
+              <option value="doff">Doff (Matte)</option>
+              <option value="transparent">Glossy (Mengkilat)</option>
             </select>
           </div>
 

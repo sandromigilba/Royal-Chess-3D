@@ -71,7 +71,7 @@ export const ChessPiece3D = memo(({ type, color, square, onSelect, isCaptured = 
         if (child instanceof THREE.Mesh && child.material) {
           const mat = child.material as THREE.MeshPhysicalMaterial;
           mat.transparent = true;
-          const baseOpacity = pieceTheme === 'doff' ? 1.0 : (color === 'w' ? 0.80 : 0.72);
+          const baseOpacity = 1.0;
           mat.opacity = baseOpacity * (1 - progress);
         }
       });
@@ -114,9 +114,8 @@ export const ChessPiece3D = memo(({ type, color, square, onSelect, isCaptured = 
       groupRef.current.traverse((child) => {
         if (child instanceof THREE.Mesh && child.material) {
           const mat = child.material as THREE.MeshPhysicalMaterial;
-          mat.transparent = pieceTheme !== 'doff';
-          const baseOpacity = pieceTheme === 'doff' ? 1.0 : (color === 'w' ? 0.80 : 0.72);
-          mat.opacity = baseOpacity;
+          mat.transparent = false;
+          mat.opacity = 1.0;
         }
       });
     }

@@ -21,23 +21,23 @@ export function PieceMaterial({ color, hovered = false, selected = false, checki
   checking?: boolean;
 }) {
   const pieceTheme = useSettingsStore((state) => state.pieceTheme);
+  const isDoff = pieceTheme === 'doff';
 
-  // White: abu muda (#cdd1d6), Black: abu tua (#4b5058)
-  const baseColor = color === 'w' ? '#cdd1d6' : '#4b5058';
+  // White: doff = #cdd1d6 (abu muda), glossy = #eceff2 (whiter)
+  // Black: doff = #4b5058 (abu tua), glossy = #546378 (lighter blue-gray)
+  const baseColor = color === 'w' 
+    ? (isDoff ? '#cdd1d6' : '#eceff2') 
+    : (isDoff ? '#4b5058' : '#546378');
 
   const emissive = checking 
     ? '#ff3333'
     : selected 
       ? (color === 'w' ? '#a5d8ff' : '#1971c2')
       : hovered 
-        ? (color === 'w' ? '#9ba4b0' : '#686f7a') 
+        ? (color === 'w' ? (isDoff ? '#9ba4b0' : '#b0b8c4') : (isDoff ? '#686f7a' : '#708197')) 
         : '#000000';
 
-  const isDoff = pieceTheme === 'doff';
-
-  const opacity = isDoff
-    ? 1.0
-    : (color === 'w' ? 0.80 : 0.72);
+  const opacity = 1.0;
 
   const roughness = isDoff
     ? (color === 'w' ? 0.50 : 0.55)
@@ -69,7 +69,7 @@ export function PieceMaterial({ color, hovered = false, selected = false, checki
       clearcoatRoughness={clearcoatRoughness}
       emissive={emissive}
       emissiveIntensity={checking ? 1.1 : (selected ? 0.55 : (hovered ? 0.18 : 0.0))}
-      transparent={!isDoff}
+      transparent={false}
       opacity={opacity}
     />
   )
